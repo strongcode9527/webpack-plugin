@@ -3,6 +3,7 @@ var webpack = require('webpack'),
     UglifyJSPlugin = require('uglifyjs-webpack-plugin'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+    babelPlugin = require('./plugin/index.js')
 
 module.exports = {
   entry: [path.resolve(__dirname, './src/index')],
@@ -30,6 +31,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'index.html'
     }),
-    new BundleAnalyzerPlugin()
+    new BundleAnalyzerPlugin(),
+    new babelPlugin()
   ]
 }
