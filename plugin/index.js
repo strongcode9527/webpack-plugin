@@ -1,6 +1,6 @@
 const babel = require('babel-core')
 const { SourceMapConsumer } = require('source-map')
-const RequestShortener = require('webpack/lib/RequestShortener')
+const RequestShortener = require('webpack/lib/RequestShortener') 
 const { RawSource, SourceMapSource } = require('webpack-sources')
 const ModuleFilenameHelpers = require('webpack/lib/ModuleFilenameHelpers')
 
@@ -19,11 +19,17 @@ module.exports = class BabelPlugin {
     }
   }
   apply (compiler) {
+    // compilation 创建成功。
+
     compiler.plugin('compilation', compilation => {
       // 现在设置回调来访问编译中的步骤：
       const requestShortener = new RequestShortener(compiler.context)
       const compiledAssets = new WeakSet()
       compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
+        
+        // 此时的chunks已经是通过webpack打包，以及uglifyjs处理过后的chunks。
+        console.log('chunks', chunks)
+
         chunks
           .reduce((acc, chunk) => acc.concat(chunk.files || []), [])
           .concat(compilation.additionalChunkAssets || [])
@@ -35,6 +41,9 @@ module.exports = class BabelPlugin {
       })
     })
   }
+
+  // 这里的compile非官方接口， 在34行进行调用。
+  // 主要是在打包完成后，对打包后的文件进行编译。
   compile (file, compilation, compiledAssets, requestShortener) {
     const asset = compilation.assets[file]
     if (compiledAssets.has(asset)) {
